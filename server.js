@@ -10,7 +10,7 @@ const HISTORY_FILE = path.join(__dirname, 'data', 'history.json');
 
 app.use(cors());
 app.use(bodyParser.json());
-app.use(express.static('public'));
+app.use(express.static('.'));
 
 // Ensure data directory exists
 if (!fs.existsSync(path.join(__dirname, 'data'))) {
