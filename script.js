@@ -125,10 +125,87 @@ function exportToCSV() {
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
-    link.setAttribute("download", `spectral_analysis_${new Date().getTime()}.csv`);
+    link.setAttribute("download", `spectral_data_${new Date().getTime()}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+}
+
+function exportToExcel() {
+    const xInputs = document.querySelectorAll('.x-val');
+    const yInputs = document.querySelectorAll('.y-val');
+    let rows = [["Concentration (x)", "Absorbance (y)"]];
+    
+    xInputs.forEach((input, i) => {
+        if(input.value !== "" && yInputs[i].value !== "") {
+            rows.push([parseFloat(input.value), parseFloat(yInputs[i].value)]);
+        }
+    });
+
+    // Add regression metrics
+    rows.push([]);
+    rows.push(["Regression Analysis"]);
+    rows.push(["Equation", document.getElementById('formulaText').innerText]);
+    rows.push(["Slope (m)", regressionModel.m]);
+    rows.push(["Intercept (b)", regressionModel.b]);
+    rows.push(["R-Squared", regressionModel.r2]);
+
+    const worksheet = XLSX.utils.aoa_to_sheet(rows);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Spectral Analysis");
+    XLSX.writeFile(workbook, `spectral_analysis_${new Date().getTime()}.xlsx`);
+}
+
+function exportToPDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    
+    doc.setFontSize(18);
+    doc.text("Spectral Linear Regression Report", 14, 22);
+    
+    doc.setFontSize(10);
+    doc.setTextColor(100);
+    doc.text(`Generated on: ${new Date().toLocaleString()}`, 14, 30);
+    
+    // Summary Box
+    doc.setDrawColor(200);
+    doc.setFillColor(245, 247, 250);
+    doc.rect(14, 35, 182, 35, 'F');
+    doc.setTextColor(0);
+    doc.setFont(undefined, 'bold');
+    doc.text("Regression Model Summary:", 20, 45);
+    doc.setFont(undefined, 'normal');
+    doc.text(`Equation: ${document.getElementById('formulaText').innerText}`, 20, 52);
+    doc.text(`Slope (m): ${regressionModel.m.toFixed(6)}`, 20, 59);
+    doc.text(`Intercept (b): ${regressionModel.b.toFixed(6)}`, 90, 59);
+    doc.text(`R-Squared (R2): ${regressionModel.r2.toFixed(6)}`, 20, 66);
+
+    // Data Table
+    const xInputs = document.querySelectorAll('.x-val');
+    const yInputs = document.querySelectorAll('.y-val');
+    let tableData = [];
+    xInputs.forEach((input, i) => {
+        if(input.value !== "" && yInputs[i].value !== "") {
+            tableData.push([input.value, yInputs[i].value]);
+        }
+    });
+
+    doc.autoTable({
+        startY: 75,
+        head: [['Concentration (x)', 'Absorbance (y)']],
+        body: tableData,
+        theme: 'striped',
+        headStyles: { fillColor: [52, 152, 219] }
+    });
+
+    // Add Chart Image
+    const canvas = document.getElementById('regressionChart');
+    const imgData = canvas.toDataURL('image/png');
+    const finalY = doc.lastAutoTable.finalY + 10;
+    doc.text("Visualization Plot:", 14, finalY);
+    doc.addImage(imgData, 'PNG', 14, finalY + 5, 180, 100);
+
+    doc.save(`spectral_report_${new Date().getTime()}.pdf`);
 }
 
 // Backend Assistance: Save to history

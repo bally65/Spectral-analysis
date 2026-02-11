@@ -6,6 +6,10 @@
     <title>光譜線性回歸分析儀 | Lab Cloud</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Export Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="p-4 md:p-8">
@@ -118,12 +122,17 @@
                     <div class="xl:col-span-3 lab-card">
                         <div class="flex justify-between items-center mb-6">
                             <h3 class="text-lg font-bold text-slate-700">線性擬合曲線 (Linear Fit)</h3>
-                            <div class="flex space-x-2">
-                                <button onclick="exportToCSV()" class="text-xs bg-green-100 px-3 py-1.5 rounded-full font-bold text-green-700 hover:bg-green-200 flex items-center">
-                                    <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                                    匯出 CSV
+                            <div class="flex flex-wrap gap-2">
+                                <button onclick="exportToPDF()" class="text-xs bg-red-100 px-3 py-1.5 rounded-full font-bold text-red-700 hover:bg-red-200 flex items-center">
+                                    📄 PDF 報告
                                 </button>
-                                <button onclick="saveToBackend()" class="text-xs bg-slate-100 px-3 py-1.5 rounded-full font-bold text-slate-600 hover:bg-slate-200">💾 儲存至雲端</button>
+                                <button onclick="exportToExcel()" class="text-xs bg-emerald-100 px-3 py-1.5 rounded-full font-bold text-emerald-700 hover:bg-emerald-200 flex items-center">
+                                    Excel 試算表
+                                </button>
+                                <button onclick="exportToCSV()" class="text-xs bg-green-100 px-3 py-1.5 rounded-full font-bold text-green-700 hover:bg-green-200 flex items-center">
+                                    CSV 原始數據
+                                </button>
+                                <button onclick="saveToBackend()" class="text-xs bg-slate-100 px-3 py-1.5 rounded-full font-bold text-slate-600 hover:bg-slate-200">💾 儲存</button>
                             </div>
                         </div>
                         <div class="relative h-[400px]">
