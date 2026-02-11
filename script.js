@@ -112,9 +112,10 @@ function updateUnknown() {
 }
 
 function exportToCSV() {
+    console.log("Exporting to CSV...");
     const xInputs = document.querySelectorAll('.x-val');
     const yInputs = document.querySelectorAll('.y-val');
-    let csvContent = "data:text/csv;charset=utf-8,Concentration,Absorbance\n";
+    let csvContent = "Concentration,Absorbance\n";
     
     xInputs.forEach((input, i) => {
         if(input.value !== "" && yInputs[i].value !== "") {
@@ -122,10 +123,12 @@ function exportToCSV() {
         }
     });
 
-    const encodedUri = encodeURI(csvContent);
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
     link.setAttribute("download", `spectral_data_${new Date().getTime()}.csv`);
+    link.style.visibility = 'hidden';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
