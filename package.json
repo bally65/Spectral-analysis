@@ -1,0 +1,14 @@
+{
+  "name": "spectral-analysis-tool",
+  "version": "1.1.0",
+  "description": "Professional Spectral Linear Regression Tool with Node.js Backend",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5"
+  }
+}
