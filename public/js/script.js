@@ -111,6 +111,26 @@ function updateUnknown() {
     }
 }
 
+function exportToCSV() {
+    const xInputs = document.querySelectorAll('.x-val');
+    const yInputs = document.querySelectorAll('.y-val');
+    let csvContent = "data:text/csv;charset=utf-8,Concentration,Absorbance\n";
+    
+    xInputs.forEach((input, i) => {
+        if(input.value !== "" && yInputs[i].value !== "") {
+            csvContent += `${input.value},${yInputs[i].value}\n`;
+        }
+    });
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `spectral_analysis_${new Date().getTime()}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
 // Backend Assistance: Save to history
 async function saveToBackend() {
     if (regressionModel.m === 0) return alert("Please calculate first");
